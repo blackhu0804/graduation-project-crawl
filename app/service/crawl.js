@@ -1,5 +1,7 @@
 const { Service } = require("egg");
 const cheerio = require("cheerio");
+const request = require("superagent");
+const SuperagentProxy = require("superagent-proxy");
 
 class crawlService extends Service {
   async fetch() {

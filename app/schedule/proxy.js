@@ -52,6 +52,7 @@ class proxyCrawl extends Subscription {
    * 存入数据库
    */
   async subscribe() {
+    console.log("1111");
     let isNoData = await this.initTable();
     if (isNoData) {
       let { data } = await this.ctx.curl("http://www.qydaili.com/free/");
@@ -65,7 +66,12 @@ class proxyCrawl extends Subscription {
           .find("td")
           .first()
           .text();
-        proxyData.push({ proxy });
+        let port = $this.find("td:nth-child(2)").text();
+        let protocol = $this
+          .find("td:nth-child(4)")
+          .text()
+          .toLowerCase();
+        proxyData.push({ proxy: `${protocol}://${proxy}:${port}` });
       });
 
       try {
