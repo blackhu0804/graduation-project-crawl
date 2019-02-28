@@ -11,7 +11,16 @@ class HomeController extends Controller {
   async crawl() {
     const { ctx } = this;
     let data = await ctx.service.crawl.fetch();
-    ctx.body = data;
+    // let data = [{ jobTitle: "xxx" }];
+    try {
+      let result = await ctx.model.Work.create(data);
+      ctx.body = {
+        code: 0,
+        data
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

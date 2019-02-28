@@ -6,7 +6,7 @@ class crawlService extends Service {
     const { ctx } = this;
     let items = [];
 
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= 1; page++) {
       this.ctx.logger.debug(`正在爬取boss第${page}页职位信息`);
       let { data } = await ctx.curl(
         `https://www.zhipin.com/c101010100/?page=${page}&ka=page-${page}`
