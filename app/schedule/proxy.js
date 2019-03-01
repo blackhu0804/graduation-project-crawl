@@ -55,7 +55,9 @@ class proxyCrawl extends Subscription {
     console.log("1111");
     let isNoData = await this.initTable();
     if (isNoData) {
-      let { data } = await this.ctx.curl("http://www.qydaili.com/free/");
+      let { data } = await this.ctx.curl(
+        "http://ip.kxdaili.com/dailiip/2/1.html#ip"
+      );
       data = data.toString();
       let $ = cheerio.load(data);
       let proxyText = $("tbody tr");
@@ -67,11 +69,11 @@ class proxyCrawl extends Subscription {
           .first()
           .text();
         let port = $this.find("td:nth-child(2)").text();
-        let protocol = $this
-          .find("td:nth-child(4)")
-          .text()
-          .toLowerCase();
-        proxyData.push({ proxy: `${protocol}://${proxy}:${port}` });
+        // let protocol = $this
+        //   .find("td:nth-child(4)")
+        //   .text()
+        //   .toLowerCase();
+        proxyData.push({ proxy: `http://${proxy}:${port}` });
       });
 
       try {
