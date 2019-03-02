@@ -7,6 +7,7 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
+      // immediate: true,
       // interval: "5s",
       cron: "0 0 */12 * * *", // 12小时爬一次
       type: "all" // 指定所有的 worker 都需要执行
@@ -113,34 +114,33 @@ class updataCrawl extends Subscription {
     // 取随机ip
     let ip = await this.getProxy();
     console.log(ip);
-    for (let page = 30; page <= 30; page++) {
-      // this.ctx.logger.debug(`正在爬取boss第${page}页职位信息`);
-      // let { data } = await ctx.curl(
-      //   `https://www.zhipin.com/c101010100/?page=${page}&ka=page-${page}`
-      // );
-      try {
-        await request
-          .get(
-            `https://www.zhipin.com/c101010100/?page=${page}&ka=page-${page}`
-          )
-          .set("headers", headers)
-          .proxy(ip)
-          .timeout(10000)
-          .end(async (err, res) => {
-            if (err) {
-              console.error("error");
-              return;
-            } else if (res.statusCode === 200) {
-              // console.log(res.text);
-              this.saveData(res.text);
-            } else {
-              console.log("ip访问出错！重新选择ip");
-              this.subscribe();
-            }
-          });
-      } catch (error) {
-        console.log(error);
-      }
+    for (let page = 30; page <= 60; page++) {
+      setTimeout(async () => {
+        try {
+          await request
+            .get(
+              `https://www.zhipin.com/c100010000/?period=4&page=${page}&ka=page-${page}`
+            )
+            .set("headers", headers)
+            .proxy(ip)
+            .timeout(10000)
+            .end(async (err, res) => {
+              if (err) {
+                console.error(err);
+                this.subscribe();
+
+                return;
+              } else if (res.statusCode === 200) {
+                this.saveData(res.text);
+              } else {
+                console.log("ip访问出错！重新选择ip");
+                this.subscribe();
+              }
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      }, page * 2000);
     }
     return items;
   }
