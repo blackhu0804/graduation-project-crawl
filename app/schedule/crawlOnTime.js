@@ -1,13 +1,13 @@
 const Subscription = require("egg").Subscription;
 const request = require("superagent");
 const SuperagentProxy = require("superagent-proxy");
-const fs = require("fs");
+const cheerio = require("cheerio");
 SuperagentProxy(request);
 
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      interval: "5s",
+      // interval: "5s",
       cron: "0 0 */12 * * *", // 12小时爬一次
       type: "all" // 指定所有的 worker 都需要执行
     };
@@ -32,6 +32,7 @@ class updataCrawl extends Subscription {
   async saveData(data) {
     let $ = cheerio.load(data);
     let jobItem = $(".job-primary");
+    let items = [];
     jobItem.each(function(index, item) {
       let $this = $(item);
       let jobTitle = $this
@@ -90,6 +91,8 @@ class updataCrawl extends Subscription {
         peopleCount
       });
     });
+    await this.ctx.model.Work.create(items);
+    console.log("存储数据成功");
   }
 
   /**
@@ -110,7 +113,7 @@ class updataCrawl extends Subscription {
     // 取随机ip
     let ip = await this.getProxy();
     console.log(ip);
-    for (let page = 1; page <= 1; page++) {
+    for (let page = 30; page <= 30; page++) {
       // this.ctx.logger.debug(`正在爬取boss第${page}页职位信息`);
       // let { data } = await ctx.curl(
       //   `https://www.zhipin.com/c101010100/?page=${page}&ka=page-${page}`
@@ -128,7 +131,7 @@ class updataCrawl extends Subscription {
               console.error("error");
               return;
             } else if (res.statusCode === 200) {
-              console.log(res.text);
+              // console.log(res.text);
               this.saveData(res.text);
             } else {
               console.log("ip访问出错！重新选择ip");
