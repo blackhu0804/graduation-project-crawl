@@ -5,6 +5,7 @@ class cityCrawl extends SubScription {
   static get schedule() {
     return {
       // immediate: true,
+      cron: "0 0 0 1 12 1", // 12小时爬一次
       type: "all"
     };
   }

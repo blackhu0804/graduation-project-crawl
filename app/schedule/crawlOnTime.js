@@ -7,7 +7,7 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      // immediate: true,
+      immediate: true,
       // interval: "5s",
       cron: "0 0 */12 * * *", // 12小时爬一次
       type: "all" // 指定所有的 worker 都需要执行
@@ -30,7 +30,7 @@ class updataCrawl extends Subscription {
   /**
    * 将网页解析存到mongodb
    */
-  async saveData(data) {
+  async saveData(data, regionCode, regionName) {
     let $ = cheerio.load(data);
     let jobItem = $(".job-primary");
     let items = [];
@@ -89,11 +89,13 @@ class updataCrawl extends Subscription {
         academic,
         companyCategory,
         finance,
-        peopleCount
+        peopleCount,
+        regionCode,
+        regionName
       });
     });
     await this.ctx.model.Work.create(items);
-    console.log("存储数据成功");
+    console.log(`===存储${regionName}职位数据成功===`);
   }
 
   /**
@@ -114,33 +116,57 @@ class updataCrawl extends Subscription {
     // 取随机ip
     let ip = await this.getProxy();
     console.log(ip);
-    for (let page = 30; page <= 60; page++) {
+    // 去城市id
+    let region = await this.ctx.model.City.find({});
+    let regionCode = region.map(item => {
+      return item.code;
+    });
+    let regionName = region.map(item => {
+      return item.name;
+    });
+    // console.log(regionCode, regionName);
+    for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
       setTimeout(async () => {
-        try {
-          await request
-            .get(
-              `https://www.zhipin.com/c100010000/?period=4&page=${page}&ka=page-${page}`
-            )
-            .set("headers", headers)
-            .proxy(ip)
-            .timeout(10000)
-            .end(async (err, res) => {
-              if (err) {
-                console.error(err);
-                this.subscribe();
-
-                return;
-              } else if (res.statusCode === 200) {
-                this.saveData(res.text);
-              } else {
-                console.log("ip访问出错！重新选择ip");
-                this.subscribe();
-              }
-            });
-        } catch (error) {
-          console.log(error);
+        for (let page = 1; page <= 10; page++) {
+          setTimeout(async () => {
+            try {
+              await request
+                .get(
+                  `https://www.zhipin.com/c${
+                    regionCode[regionIdx]
+                  }/?page=${page}&ka=page-${page}`
+                )
+                .set("headers", headers)
+                .proxy(ip)
+                .timeout(10000)
+                .end(async (err, res) => {
+                  if (err) {
+                    console.error("未知错误");
+                    ip = await this.getProxy();
+                    page--;
+                    return;
+                    // this.subscribe();
+                    // return;
+                  } else if (res.statusCode === 200) {
+                    this.saveData(
+                      res.text,
+                      regionCode[regionIdx],
+                      regionName[regionIdx]
+                    );
+                  } else {
+                    console.log("ip访问出错！重新选择ip");
+                    ip = await this.getProxy();
+                    page--;
+                    return;
+                    // this.subscribe();
+                  }
+                });
+            } catch (error) {
+              console.log(error);
+            }
+          }, page * 2000);
         }
-      }, page * 2000);
+      }, regionIdx * 21000);
     }
     return items;
   }

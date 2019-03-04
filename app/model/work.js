@@ -14,7 +14,9 @@ module.exports = app => {
     academic: String,
     companyCategory: String,
     finance: String,
-    peopleCount: String
+    peopleCount: String,
+    regionCode: String,
+    regionName: String
   });
   let Work = mongoose.model("Work", WorkSchema);
   return Work;

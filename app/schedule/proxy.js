@@ -94,10 +94,7 @@ class proxyCrawl extends Subscription {
           //   .toLowerCase();
           // 判断ip是否可以正常访问
           let ip = `http://${proxy}:${port}`;
-          await _this.checkIP(
-            ip,
-            "https://www.zhipin.com/job_detail/?query=&scity=101010100&industry=&position="
-          );
+          await _this.checkIP(ip, "https://www.zhipin.com/c101010100");
         });
       }, page * 10000);
     }
