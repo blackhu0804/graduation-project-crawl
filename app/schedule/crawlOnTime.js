@@ -7,7 +7,7 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      immediate: true,
+      // immediate: true,
       // interval: "5s",
       cron: "0 0 */12 * * *", // 12小时爬一次
       type: "all" // 指定所有的 worker 都需要执行

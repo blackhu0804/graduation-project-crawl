@@ -30,6 +30,13 @@ module.exports = appInfo => {
     // myAppName: 'egg',
   };
 
+  config.security = {
+    csrf: {
+      enable: false
+    },
+    domainWhiteList: ["http://localhost:8080"]
+  };
+
   return {
     ...config,
     ...userConfig
