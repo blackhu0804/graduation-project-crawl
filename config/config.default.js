@@ -37,6 +37,17 @@ module.exports = appInfo => {
     domainWhiteList: ["http://localhost:8080"]
   };
 
+  config.onerror = {
+    json(err, ctx) {
+      const { code, httpStatusCode, httpMsg } = err;
+      if (httpStatusCode) ctx.statusCode = httpStatusCode;
+      ctx.body = {
+        code,
+        msg: httpMsg
+      };
+    }
+  };
+
   return {
     ...config,
     ...userConfig

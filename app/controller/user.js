@@ -15,7 +15,21 @@ class UserController extends Controller {
     };
   }
 
-  async loginWithUnPw(username, password) {}
+  async loginWithUnPw() {
+    const { username, password } = this.ctx.request.body;
+    const foundUser = await this.ctx.service.user.loginWithUnPw(
+      username,
+      password
+    );
+    this.ctx.body = {
+      code: 0,
+      data: {
+        user: {
+          id: foundUser.id
+        }
+      }
+    };
+  }
 
   async logout(username, password) {}
 }
