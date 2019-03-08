@@ -64,6 +64,16 @@ class User extends Service {
       id: found._id
     };
   }
+
+  async retrievePw(email, password) {
+    const { salt, encrypted } = await genEncryptedPassword(password);
+    const result = await this.ctx.model.User.findOneAndUpdate(
+      { email },
+      { password: encrypted, salt }
+    );
+
+    return result._id;
+  }
 }
 
 module.exports = User;

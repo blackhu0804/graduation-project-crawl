@@ -96,6 +96,32 @@ class UserController extends Controller {
   }
 
   /**
+   * 找回密码
+   * method: 'POST'
+   * url: '/sendVerifyCode'
+   * body: {
+   *  email: '',
+   *  code: "",
+   *  password: ""
+   * }
+   */
+  async retrieve() {
+    const { email, code, password } = this.ctx.request.body;
+    const verifyCode = await this.app.redis.get(
+      `egg_crawl_verify_code${email}`
+    );
+    if (code === verifyCode) {
+      const result = await this.ctx.service.user.retrievePw(email, password);
+      if (result) {
+        this.ctx.body = {
+          code: 0,
+          msg: "修改密码成功，请重新登录！~"
+        };
+      }
+    }
+  }
+
+  /**
    * 发送邮箱验证码
    * url: '/sendVerifyCode'
    * method: POST

@@ -12,5 +12,6 @@ module.exports = app => {
   router.post("/user", controller.user.createUser);
   router.post("/login", controller.user.loginWithUnPw);
   router.post("/logout", controller.user.logout);
+  router.post("/retrieve", controller.user.retrieve);
   router.post("/sendVerifyCode", controller.user.sendVerifyCode);
 };
