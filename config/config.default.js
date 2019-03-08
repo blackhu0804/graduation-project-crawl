@@ -37,6 +37,15 @@ module.exports = appInfo => {
     domainWhiteList: ["http://localhost:8080"]
   };
 
+  config.redis = {
+    client: {
+      host: "localhost",
+      port: 6379,
+      db: 0,
+      password: ""
+    }
+  };
+
   config.onerror = {
     json(err, ctx) {
       const { code, httpStatusCode, httpMsg } = err;
