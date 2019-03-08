@@ -1,6 +1,16 @@
 const { Controller } = require("egg");
 
 class UserController extends Controller {
+  /**
+   * url: '/user'
+   * method: POST
+   * body : {
+   *  username: '',
+   *  password: '',
+   *  email: '',
+   *  code: ''
+   * }
+   */
   async createUser() {
     const { username, password, email, code } = this.ctx.request.body;
     const verifyCode = await this.app.redis.get(
@@ -26,6 +36,14 @@ class UserController extends Controller {
     }
   }
 
+  /**
+   * url: '/login'
+   * method: POST
+   * body : {
+   *  username: '',
+   *  password: '',
+   * }
+   */
   async loginWithUnPw() {
     const { username, password } = this.ctx.request.body;
     const foundUser = await this.ctx.service.user.loginWithUnPw(
@@ -47,6 +65,11 @@ class UserController extends Controller {
     };
   }
 
+  /**
+   * 判断用户是否登录
+   * url: '/'
+   * method: GET
+   */
   async index() {
     this.ctx.body = {
       code: 0,
@@ -56,6 +79,10 @@ class UserController extends Controller {
     };
   }
 
+  /**
+   * url: 'logout'
+   * method: POST
+   */
   async logout() {
     if (this.ctx.session.user) {
       this.ctx.session.user = null;
@@ -68,6 +95,14 @@ class UserController extends Controller {
     };
   }
 
+  /**
+   * 发送邮箱验证码
+   * url: '/sendVerifyCode'
+   * method: POST
+   * body: {
+   *  email: ''
+   * }
+   */
   async sendVerifyCode() {
     const { email } = this.ctx.request.body;
     const verifyCode = Math.ceil(Math.random() * 1000000);
@@ -92,7 +127,6 @@ class UserController extends Controller {
     );
 
     if (codeCoolingDown) {
-      // throw new Error("验证码发送频繁");
       this.ctx.body = {
         code: -1,
         msg: "验证码发送频繁"
