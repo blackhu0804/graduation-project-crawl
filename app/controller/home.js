@@ -21,6 +21,29 @@ class HomeController extends Controller {
       console.log(error);
     }
   }
+
+  async sendCode() {
+    const { email } = this.ctx.request.body;
+    const emailOptions = {
+      from: "812510003@qq.com",
+      subject: "注册验证码",
+      to: email,
+      text: "xxxxx"
+    };
+
+    let result = await this.ctx.service.sendCode.send(emailOptions);
+    if (!result) {
+      this.ctx.body = {
+        code: -1,
+        msg: "发送失败"
+      };
+    } else {
+      this.ctx.body = {
+        code: 0,
+        msg: "发送成功"
+      };
+    }
+  }
 }
 
 module.exports = HomeController;

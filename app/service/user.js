@@ -24,11 +24,12 @@ async function genEncryptedPassword(rawPassword, salt) {
 }
 
 class User extends Service {
-  async createUserWithUnPw(username, password) {
+  async createUserWithUnPw(username, password, email) {
     const { salt, encrypted } = await genEncryptedPassword(password);
     const created = await this.ctx.model.User.create({
       username,
       password: encrypted,
+      email,
       salt
     });
     delete created.password;
