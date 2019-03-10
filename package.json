@@ -9,6 +9,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "egg": "^2.15.1",
+    "egg-cors": "^2.1.2",
     "egg-mongoose": "^3.1.1",
     "egg-redis": "^2.3.0",
     "egg-scripts": "^2.11.0",
