@@ -8,7 +8,7 @@ module.exports = app => {
   // router.get("/", controller.home.index);
   // router.get("/data", controller.home.crawl);
 
-  router.get("/", controller.user.index);
+  router.get("/isLogin", controller.user.index);
   router.post("/user", controller.user.createUser);
   router.post("/login", controller.user.loginWithUnPw);
   router.post("/logout", controller.user.logout);

@@ -34,9 +34,13 @@ module.exports = appInfo => {
     csrf: {
       enable: false
     },
-    domainWhiteList: ["http://localhost:8080"]
+    domainWhiteList: ["http://127.0.0.1:8080", "http://192.168.1.4:8080"]
   };
 
+  config.cors = {
+    credentials: true,
+    origin: ["http://127.0.0.1:8080"]
+  };
   config.redis = {
     client: {
       host: "localhost",
@@ -56,6 +60,10 @@ module.exports = appInfo => {
       };
     }
   };
+
+  // config.jwt = {
+  //   secret: "123456" //自己设置的值
+  // };
 
   return {
     ...config,

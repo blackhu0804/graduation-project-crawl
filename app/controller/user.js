@@ -50,19 +50,23 @@ class UserController extends Controller {
       username,
       password
     );
-    this.ctx.session.user = {
-      id: foundUser.id
-    };
-
-    this.ctx.body = {
-      code: 0,
-      data: {
-        attemps: this.ctx.session.user,
-        user: {
-          id: foundUser.id
+    if (foundUser) {
+      this.ctx.session.user = foundUser;
+      this.ctx.cookies.set("token", foundUser, {
+        maxAge: 1000 * 60 * 60
+      });
+      console.log(this.ctx.session.user);
+      this.ctx.body = {
+        code: 0,
+        data: {
+          msg: "登录成功",
+          attemps: this.ctx.session.user,
+          user: {
+            username: foundUser.username
+          }
         }
-      }
-    };
+      };
+    }
   }
 
   /**
@@ -71,6 +75,7 @@ class UserController extends Controller {
    * method: GET
    */
   async index() {
+    console.log(this.ctx.session.user);
     this.ctx.body = {
       code: 0,
       data: {
@@ -98,7 +103,7 @@ class UserController extends Controller {
   /**
    * 找回密码
    * method: 'POST'
-   * url: '/sendVerifyCode'
+   * url: '/retrieve'
    * body: {
    *  email: '',
    *  code: "",

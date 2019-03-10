@@ -61,7 +61,7 @@ class User extends Service {
       );
     }
     return {
-      id: found._id
+      username: found.username
     };
   }
 
