@@ -32,9 +32,9 @@ class User extends Service {
       email,
       salt
     });
-    delete created.password;
-    delete created.salt;
-    return created;
+    // delete created.password;
+    // delete created.salt;
+    return created.username;
   }
 
   async loginWithUnPw(username, password) {

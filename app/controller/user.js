@@ -24,13 +24,15 @@ class UserController extends Controller {
       );
       this.ctx.body = {
         code: 0,
-        data: {
-          user: createdUser
-        }
+        msg: "注册成功"
+        // data: {
+        //   msg: "注册成功",
+        //   user: createdUser
+        // }
       };
     } else {
       this.ctx.body = {
-        code: 0,
+        code: -1,
         msg: "验证码不正确"
       };
     }
