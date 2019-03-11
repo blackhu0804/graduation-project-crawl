@@ -14,4 +14,5 @@ module.exports = app => {
   router.post("/logout", controller.user.logout);
   router.post("/retrieve", controller.user.retrieve);
   router.post("/sendVerifyCode", controller.user.sendVerifyCode);
+  router.post("/checkCode", controller.user.checkCode);
 };

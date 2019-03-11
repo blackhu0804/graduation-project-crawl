@@ -124,22 +124,50 @@ class UserController extends Controller {
   }
 
   /**
+   * 校验验证码
+   */
+  async checkCode() {
+    const { email, code } = this.ctx.request.body;
+    const verifyCode = await this.app.redis.get(
+      `egg_crawl_verify_code${email}`
+    );
+    if (code === verifyCode) {
+      this.ctx.body = {
+        code: 0,
+        msg: "验证验证码成功"
+      };
+    } else {
+      this.ctx.body = {
+        code: -1,
+        msg: "验证码错误"
+      };
+    }
+  }
+
+  /**
    * 发送邮箱验证码
    * url: '/sendVerifyCode'
    * method: POST
    * body: {
-   *  email: ''
+   *  email: '',
+   *  type: 0 注册 1 找回密码
    * }
    */
   async sendVerifyCode() {
-    const { email } = this.ctx.request.body;
+    const { email, type } = this.ctx.request.body;
     const verifyCode = Math.ceil(Math.random() * 1000000);
 
     const userIsInTable = await this.ctx.model.User.find({ email });
-    if (userIsInTable.length > 0) {
+    if (type === 0 && userIsInTable.length > 0) {
       this.ctx.body = {
-        code: 0,
+        code: -1,
         msg: "邮箱已注册"
+      };
+      return;
+    } else if (type === 1 && userIsInTable.length === 0) {
+      this.ctx.body = {
+        code: -1,
+        msg: "邮箱不存在"
       };
       return;
     }
@@ -180,12 +208,12 @@ class UserController extends Controller {
     if (!result) {
       this.ctx.body = {
         code: -1,
-        msg: "发送失败"
+        msg: "验证码发送失败"
       };
     } else {
       this.ctx.body = {
         code: 0,
-        msg: "发送成功"
+        msg: "验证码发送成功"
       };
     }
   }
