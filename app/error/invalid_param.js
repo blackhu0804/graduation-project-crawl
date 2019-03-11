@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-const BaseHttp = require('./base_http');
+const BaseHttp = require("./base_http");
 
 class InvalidParam extends BaseHttp {
-  constructor(paramName, requirement, httpMsg) {
+  constructor(paramName, requirement, httpMsg, code) {
     const msg = `${paramName} does not meet requirement: ${requirement}`;
-    super(msg, 40003, httpMsg || '输入有问题呀老铁', 403);
+    super(msg, code, httpMsg || "输入有问题呀老铁", code);
   }
 
-  static get ['CODE']() {
-    return 40003;
+  static get ["CODE"]() {
+    return code;
   }
 }
 

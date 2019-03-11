@@ -43,7 +43,8 @@ class User extends Service {
       throw new this.ctx.app.error.InvalidParam(
         "username",
         "no such username",
-        "账户不存在"
+        "账户不存在",
+        401
       );
     }
 
@@ -57,7 +58,8 @@ class User extends Service {
       throw new this.ctx.app.error.InvalidParam(
         "passsword",
         "username or password do not match",
-        "用户名或密码不正确"
+        "用户名或密码不正确",
+        401
       );
     }
     return {

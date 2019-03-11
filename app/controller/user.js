@@ -52,9 +52,6 @@ class UserController extends Controller {
     );
     if (foundUser) {
       this.ctx.session.user = foundUser;
-      this.ctx.cookies.set("token", foundUser, {
-        maxAge: 1000 * 60 * 60
-      });
       console.log(this.ctx.session.user);
       this.ctx.body = {
         code: 0,

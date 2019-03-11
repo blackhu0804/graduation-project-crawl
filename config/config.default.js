@@ -34,6 +34,9 @@ module.exports = appInfo => {
     csrf: {
       enable: false
     },
+    methodnoallow: {
+      enable: false
+    },
     domainWhiteList: ["http://127.0.0.1:8080", "http://192.168.1.4:8080"]
   };
 
