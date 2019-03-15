@@ -15,4 +15,6 @@ module.exports = app => {
   router.post("/retrieve", controller.user.retrieve);
   router.post("/sendVerifyCode", controller.user.sendVerifyCode);
   router.post("/checkCode", controller.user.checkCode);
+
+  router.post("/getCityData", controller.data.cityData);
 };
