@@ -9,7 +9,7 @@ class crawlService extends Service {
     let items = [];
 
     for (let page = 1; page <= 1; page++) {
-      this.ctx.logger.debug(`正在爬取boss第${page}页职位信息`);
+      // this.ctx.logger.debug(`正在爬取boss第${page}页职位信息`);
       let { data } = await ctx.curl(
         `https://www.zhipin.com/c101010100/?page=${page}&ka=page-${page}`
       );
@@ -50,7 +50,8 @@ class crawlService extends Service {
           workPrimary.replace(/&#x/g, "%u").replace(/;/g, "")
         );
         let [workLocation, workYear, academic] = workPrimary.split("|");
-
+        workLocation = workLocation.split(" ")[0];
+        console.log(workLocation);
         let workCompony = $this
           .find(".company-text>p")
           .first()

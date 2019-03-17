@@ -69,7 +69,8 @@ class updataCrawl extends Subscription {
         workPrimary.replace(/&#x/g, "%u").replace(/;/g, "")
       );
       let [workLocation, workYear, academic] = workPrimary.split("|");
-
+      workLocation = workLocation.split(" ")[0];
+      console.log(workLocation);
       let workCompony = $this
         .find(".company-text>p")
         .first()

@@ -58,6 +58,10 @@ class dataController extends Controller {
       }
     };
   }
+
+  async mapData() {
+    const { ctx } = this;
+  }
 }
 
 module.exports = dataController;
