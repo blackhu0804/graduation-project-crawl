@@ -61,6 +61,12 @@ class dataController extends Controller {
 
   async mapData() {
     const { ctx } = this;
+    const result = await ctx.model.Work.aggregate([
+      { $group: { _id: "$workLocation", count: { $sum: 1 } } }
+    ]);
+    ctx.body = {
+      result
+    };
   }
 }
 

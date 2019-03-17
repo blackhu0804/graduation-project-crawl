@@ -17,4 +17,5 @@ module.exports = app => {
   router.post("/checkCode", controller.user.checkCode);
 
   router.post("/getCityData", controller.data.cityData);
+  router.post("/mapData", controller.data.mapData);
 };
