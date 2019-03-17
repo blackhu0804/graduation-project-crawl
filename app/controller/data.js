@@ -65,7 +65,10 @@ class dataController extends Controller {
       { $group: { _id: "$workLocation", count: { $sum: 1 } } }
     ]);
     ctx.body = {
-      result
+      code: 0,
+      data: {
+        result
+      }
     };
   }
 }
