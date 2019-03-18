@@ -71,6 +71,40 @@ class dataController extends Controller {
       }
     };
   }
+
+  async conpanyData() {
+    const { ctx } = this;
+    const { city } = ctx.request.body;
+    const result = await ctx.model.Work.aggregate([
+      {
+        $match: { workLocation: city }
+      },
+      {
+        $group: {
+          _id: "$finance",
+          count: {
+            $sum: 1
+          }
+        }
+      }
+    ]);
+    let sortRet = result.sort(function(obj1, obj2) {
+      let val1 = obj1._id;
+      let val2 = obj2._id;
+      if (val1 < val2) {
+        return -1;
+      } else if (val1 > val2) {
+        return 1;
+      }
+    });
+
+    ctx.body = {
+      code: 0,
+      data: {
+        sortRet
+      }
+    };
+  }
 }
 
 module.exports = dataController;
