@@ -70,7 +70,6 @@ class updataCrawl extends Subscription {
       );
       let [workLocation, workYear, academic] = workPrimary.split("|");
       workLocation = workLocation.split(" ")[0];
-      console.log(workLocation);
       let workCompony = $this
         .find(".company-text>p")
         .first()
@@ -80,21 +79,28 @@ class updataCrawl extends Subscription {
         workCompony.replace(/&#x/g, "%u").replace(/;/g, "")
       );
       let [companyCategory, finance, peopleCount] = workCompony.split("|");
-
-      items.push({
-        jobTitle,
-        companyName,
-        salary,
-        href: `https://www.zhipin.com${href}`,
-        workLocation,
-        workYear,
-        academic,
-        companyCategory,
-        finance,
-        peopleCount,
-        regionCode,
-        regionName
-      });
+      if (!peopleCount) {
+        peopleCount = finance;
+        finance = "不需要融资";
+      }
+      // 只存入互联网职位数据
+      var regex = /互联网|计算机/;
+      if (companyCategory.match(regex)) {
+        items.push({
+          jobTitle,
+          companyName,
+          salary,
+          href: `https://www.zhipin.com${href}`,
+          workLocation,
+          workYear,
+          academic,
+          companyCategory,
+          finance,
+          peopleCount,
+          regionCode,
+          regionName
+        });
+      }
     });
     await this.ctx.model.Work.create(items);
     console.log(`===存储${regionName}职位数据成功===`);

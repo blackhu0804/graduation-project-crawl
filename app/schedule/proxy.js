@@ -97,7 +97,7 @@ class proxyCrawl extends Subscription {
           let ip = `http://${proxy}:${port}`;
           await _this.checkIP(ip, "https://www.zhipin.com/c101010100");
         });
-      }, page * 10000);
+      }, page * 5000);
     }
     // }
   }
