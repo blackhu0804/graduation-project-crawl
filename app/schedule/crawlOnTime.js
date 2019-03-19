@@ -132,7 +132,6 @@ class updataCrawl extends Subscription {
     let regionName = region.map(item => {
       return item.name;
     });
-    // console.log(regionCode, regionName);
     for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
       setTimeout(async () => {
         for (let page = 1; page <= 10; page++) {

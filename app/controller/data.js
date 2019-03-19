@@ -105,6 +105,56 @@ class dataController extends Controller {
       }
     };
   }
+
+  async getEduData() {
+    const { ctx } = this;
+    const { city } = ctx.request.body;
+    const result = await ctx.model.Work.aggregate([
+      {
+        $match: { workLocation: city }
+      },
+      {
+        $group: {
+          _id: "$academic",
+          count: {
+            $sum: 1
+          }
+        }
+      }
+    ]);
+
+    ctx.body = {
+      code: 0,
+      data: {
+        result
+      }
+    };
+  }
+
+  async getWorkExperienceData() {
+    const { ctx } = this;
+    const { city } = ctx.request.body;
+    const result = await ctx.model.Work.aggregate([
+      {
+        $match: { workLocation: city }
+      },
+      {
+        $group: {
+          _id: "$workYear",
+          count: {
+            $sum: 1
+          }
+        }
+      }
+    ]);
+
+    ctx.body = {
+      code: 0,
+      data: {
+        result
+      }
+    };
+  }
 }
 
 module.exports = dataController;
