@@ -5,7 +5,7 @@ const config = {
   port: 587,
   auth: {
     user: "812510003@qq.com",
-    pass: "sngxqqwbvkblbbhg"
+    pass: "fcapplykvfabbccg"
   }
 };
 const transporter = nodemailer.createTransport(config);
