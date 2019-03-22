@@ -21,4 +21,7 @@ module.exports = app => {
   router.post("/conpanyData", controller.data.conpanyData);
   router.post("/eduData", controller.data.getEduData);
   router.post("/experienceData", controller.data.getWorkExperienceData);
+
+  router.get("/getCity", controller.datamanage.getCityList);
+  router.post("/getWorkList", controller.datamanage.getWorkData);
 };
