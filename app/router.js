@@ -24,4 +24,6 @@ module.exports = app => {
 
   router.get("/getCity", controller.datamanage.getCityList);
   router.post("/getWorkList", controller.datamanage.getWorkData);
+  router.post("/getUserList", controller.datamanage.getUserData);
+  router.post("/getProxyList", controller.datamanage.getProxyData);
 };

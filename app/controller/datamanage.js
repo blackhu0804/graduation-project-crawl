@@ -25,7 +25,7 @@ class datamanageController extends Controller {
     })
       .skip((p - 1) * pageSize)
       .limit(pageSize)
-      .sort({ _id: -1 });
+      .sort({ _id: 1 });
 
     let totalRows = await ctx.model.Work.count({
       jobTitle: { $regex: name, $options: "$i" },
@@ -40,6 +40,46 @@ class datamanageController extends Controller {
       data: {
         result
       }
+    };
+  }
+
+  async getUserData() {
+    const { ctx } = this;
+    const { name, email, p, pageSize } = ctx.request.body;
+    const result = await ctx.model.User.find({
+      username: { $regex: name },
+      email: { $regex: email }
+    })
+      .skip((p - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ _id: 1 });
+
+    const totalRows = await ctx.model.User.count({
+      username: { $regex: name, $options: "$i" },
+      email: { $regex: email, $options: "$i" }
+    });
+
+    ctx.body = {
+      code: 0,
+      totalRows,
+      data: {
+        result
+      }
+    };
+  }
+
+  async getProxyData() {
+    const { ctx } = this;
+    const { p, pageSize } = ctx.request.body;
+    let result = await ctx.model.Proxy.find({})
+      .skip((p - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ _id: 1 });
+    let totalRows = await ctx.model.Proxy.count({});
+    ctx.body = {
+      code: 0,
+      totalRows,
+      data: { result }
     };
   }
 }
