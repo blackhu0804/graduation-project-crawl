@@ -82,6 +82,20 @@ class datamanageController extends Controller {
       data: { result }
     };
   }
+
+  async addProxy() {
+    const { ctx } = this;
+    const { protocol, ip, port } = ctx.request.body;
+    let proxy = `${protocol}://${ip}:${port}`;
+    let result = await ctx.model.Proxy.create({ proxy });
+    ctx.body = {
+      code: 0,
+      msg: "添加IP成功",
+      data: {
+        result
+      }
+    };
+  }
 }
 
 module.exports = datamanageController;

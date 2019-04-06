@@ -84,8 +84,8 @@ class updataCrawl extends Subscription {
         finance = "不需要融资";
       }
       // 只存入互联网职位数据
-      var regex = /互联网|计算机/;
-      if (companyCategory.match(regex)) {
+      var regex2 = /互联网|计算机/;
+      if (companyCategory.match(regex2)) {
         items.push({
           jobTitle,
           companyName,

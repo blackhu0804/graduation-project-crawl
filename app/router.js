@@ -26,4 +26,5 @@ module.exports = app => {
   router.post("/getWorkList", controller.datamanage.getWorkData);
   router.post("/getUserList", controller.datamanage.getUserData);
   router.post("/getProxyList", controller.datamanage.getProxyData);
+  router.post("/addProxy", controller.datamanage.addProxy);
 };
