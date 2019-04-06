@@ -5,7 +5,7 @@ module.exports = app => {
 
   const ProxySchema = new Schema({
     id: ObjectId,
-    proxy: String
+    proxy: { type: String, unique: true }
   });
   return mongoose.model("Proxy", ProxySchema);
 };

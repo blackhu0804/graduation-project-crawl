@@ -87,14 +87,44 @@ class datamanageController extends Controller {
     const { ctx } = this;
     const { protocol, ip, port } = ctx.request.body;
     let proxy = `${protocol}://${ip}:${port}`;
+
+    let isExist = await ctx.model.Proxy.findOne({ proxy });
+    if (isExist) {
+      ctx.body = {
+        code: -1,
+        msg: "已存在此IP"
+      };
+      return;
+    }
     let result = await ctx.model.Proxy.create({ proxy });
     ctx.body = {
       code: 0,
-      msg: "添加IP成功",
-      data: {
-        result
-      }
+      msg: "添加IP成功"
     };
+  }
+
+  async updateProxy() {
+    const { ctx } = this;
+    const { _id, protocol, ip, port } = ctx.request.body;
+    let proxy = `${protocol}://${ip}:${port}`;
+
+    let result = await ctx.model.Proxy.findByIdAndUpdate(_id, { proxy });
+    ctx.body = {
+      code: 0,
+      msg: "更新IP成功"
+    };
+  }
+
+  async deleteProxy() {
+    const { ctx } = this;
+    const { proxy } = ctx.request.body;
+    let result = await ctx.model.Proxy.deleteOne({ proxy });
+    if (result) {
+      ctx.body = {
+        code: 0,
+        msg: "删除成功"
+      };
+    }
   }
 }
 
