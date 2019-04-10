@@ -7,7 +7,7 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      // immediate: true,
+      immediate: true,
       // interval: "5s",
       // cron: "0 0 */12 * * *", // 12小时爬一次
       cron: "0 0 0 1 12 1",
@@ -46,7 +46,7 @@ class updataCrawl extends Subscription {
     let $ = cheerio.load(data);
     let jobItem = $(".job-primary");
     let items = [];
-    // let that = this;
+    let that = this;
     jobItem.each(async function(index, item) {
       let $this = $(item);
       let jobTitle = $this
@@ -117,9 +117,9 @@ class updataCrawl extends Subscription {
         });
       }
     });
-    console.log(items.length);
-    await this.ctx.model.Work.create(items);
-    console.log(`===存储${regionName}职位数据成功===`);
+    await this.ctx.model.Work.insertMany(items, { ordered: false }, err => {
+      console.log(`===存储${regionName}职位数据成功===`);
+    });
   }
 
   /**
@@ -148,9 +148,11 @@ class updataCrawl extends Subscription {
     let regionName = region.map(item => {
       return item.name;
     });
+    // for (let regionIdx = 1; regionIdx <= 1; regionIdx++) {
     for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
       setTimeout(async () => {
         for (let page = 1; page <= 10; page++) {
+          // for (let page = 2; page <= 2; page++) {
           setTimeout(async () => {
             try {
               await request
@@ -161,7 +163,7 @@ class updataCrawl extends Subscription {
                 )
                 .set("headers", headers)
                 .proxy(ip)
-                .timeout(10000)
+                .timeout(5000)
                 .end(async (err, res) => {
                   if (err) {
                     console.error("未知错误");
