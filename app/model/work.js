@@ -8,7 +8,7 @@ module.exports = app => {
     jobTitle: String,
     companyName: String,
     salary: String,
-    href: String,
+    href: { type: String, unique: true },
     workLocation: String,
     workYear: String,
     academic: String,

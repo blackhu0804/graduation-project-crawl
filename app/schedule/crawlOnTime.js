@@ -29,13 +29,25 @@ class updataCrawl extends Subscription {
   }
 
   /**
+   *
+   * @param {*} data
+   * @param {*} regionCode
+   * @param {*} regionName
+   */
+  async removeProxy(proxy) {
+    let result = await this.ctx.model.Proxy.deleteOne({ proxy });
+    return result;
+  }
+
+  /**
    * 将网页解析存到mongodb
    */
   async saveData(data, regionCode, regionName) {
     let $ = cheerio.load(data);
     let jobItem = $(".job-primary");
     let items = [];
-    jobItem.each(function(index, item) {
+    // let that = this;
+    jobItem.each(async function(index, item) {
       let $this = $(item);
       let jobTitle = $this
         .find(".job-title")
@@ -85,6 +97,9 @@ class updataCrawl extends Subscription {
       }
       // 只存入互联网职位数据
       var regex2 = /互联网|计算机/;
+      // let isIndb = await that.ctx.model.Work.find({
+      //   href: `https://www.zhipin.com${href}`
+      // });
       if (companyCategory.match(regex2)) {
         items.push({
           jobTitle,
@@ -102,6 +117,7 @@ class updataCrawl extends Subscription {
         });
       }
     });
+    console.log(items.length);
     await this.ctx.model.Work.create(items);
     console.log(`===存储${regionName}职位数据成功===`);
   }
@@ -123,7 +139,7 @@ class updataCrawl extends Subscription {
     };
     // 取随机ip
     let ip = await this.getProxy();
-    console.log(ip);
+    console.log("当前ip:" + ip);
     // 去城市id
     let region = await this.ctx.model.City.find({});
     let regionCode = region.map(item => {
@@ -149,11 +165,10 @@ class updataCrawl extends Subscription {
                 .end(async (err, res) => {
                   if (err) {
                     console.error("未知错误");
+                    await this.removeProxy();
                     ip = await this.getProxy();
                     page--;
                     return;
-                    // this.subscribe();
-                    // return;
                   } else if (res.statusCode === 200) {
                     this.saveData(
                       res.text,
