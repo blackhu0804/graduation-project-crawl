@@ -7,10 +7,10 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      immediate: true,
+      // immediate: true,
       // interval: "5s",
-      // cron: "0 0 */12 * * *", // 12小时爬一次
-      cron: "0 0 0 1 12 1",
+      cron: "0 0 */24 * * *", // 12小时爬一次
+      // cron: "0 0 0 1 12 1",
       type: "all" // 指定所有的 worker 都需要执行
     };
   }
@@ -148,11 +148,11 @@ class updataCrawl extends Subscription {
     let regionName = region.map(item => {
       return item.name;
     });
-    // for (let regionIdx = 1; regionIdx <= 1; regionIdx++) {
-    for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
+    for (let regionIdx = 1; regionIdx <= 1; regionIdx++) {
+      // for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
       setTimeout(async () => {
-        for (let page = 1; page <= 10; page++) {
-          // for (let page = 2; page <= 2; page++) {
+        // for (let page = 1; page <= 10; page++) {
+        for (let page = 2; page <= 2; page++) {
           setTimeout(async () => {
             try {
               await request
@@ -190,7 +190,7 @@ class updataCrawl extends Subscription {
             }
           }, page * 2000);
         }
-      }, regionIdx * 21000);
+      }, regionIdx * 1000);
     }
     return items;
   }

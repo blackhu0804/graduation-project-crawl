@@ -10,10 +10,10 @@ SuperagentProxy(request);
 class proxyCrawl extends Subscription {
   static get schedule() {
     return {
-      immediate: true,
+      // immediate: true,
       // interval: "10s",
-      // cron: "0 0 */12 * * *", // 12小时爬一次
-      cron: "0 0 0 1 12 1",
+      cron: "0 0 */24 * * *", // 12小时爬一次
+      // cron: "0 0 0 1 12 1",
       type: "all" // 指定所有的 worker 都需要执行
     };
   }

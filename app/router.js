@@ -29,4 +29,5 @@ module.exports = app => {
   router.post("/addProxy", controller.datamanage.addProxy);
   router.post("/deleteProxy", controller.datamanage.deleteProxy);
   router.post("/updateProxy", controller.datamanage.updateProxy);
+  router.post('/getWorkInfo', controller.datamanage.getWorkInfo)
 };

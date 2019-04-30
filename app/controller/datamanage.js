@@ -43,6 +43,19 @@ class datamanageController extends Controller {
     };
   }
 
+  async getWorkInfo() {
+    const {ctx} = this;
+    const {url} = ctx.request.body;
+    
+    let workInfo = await ctx.service.getWorkInfo.getWorkInfo(url)
+    ctx.body = {
+      code: 0,
+      data: {
+        workInfo
+      }
+    }
+  }
+
   async getUserData() {
     const { ctx } = this;
     const { name, email, p, pageSize } = ctx.request.body;
