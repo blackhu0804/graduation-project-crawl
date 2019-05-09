@@ -10,9 +10,9 @@ SuperagentProxy(request);
 class proxyCrawl extends Subscription {
   static get schedule() {
     return {
-      // immediate: true,
+      immediate: true,
       // interval: "10s",
-      cron: "0 0 */24 * * *", // 12小时爬一次
+      // cron: "0 0 */24 * * *", // 12小时爬一次
       // cron: "0 0 0 1 12 1",
       type: "all" // 指定所有的 worker 都需要执行
     };
@@ -69,38 +69,68 @@ class proxyCrawl extends Subscription {
    * 存入数据库
    */
   async subscribe() {
-    console.log("爬爬爬爬爬啊啪啪啪~~~");
-    let isNoData = await this.initTable();
-    // if (isNoData) {
-    for (let page = 1; page <= 3; page++) {
-      setTimeout(async () => {
-        console.log(`当前正在爬取第${page}页`);
-        let { data } = await this.ctx.curl(
-          `http://ip.kxdaili.com/dailiip/2/${page}.html#ip`
-        );
-        data = data.toString();
-        let $ = cheerio.load(data);
-        let proxyText = $("tbody tr");
-        let _this = this;
-        proxyText.each(async function(index, item) {
-          let $this = $(item);
-          let proxy = $this
-            .find("td")
-            .first()
-            .text();
-          let port = $this.find("td:nth-child(2)").text();
-          // let protocol = $this
-          //   .find("td:nth-child(4)")
-          //   .text()
-          //   .toLowerCase();
-          // 判断ip是否可以正常访问
-          let ip = `http://${proxy}:${port}`;
-          await _this.checkIP(ip, "https://www.zhipin.com/c101010100");
-        });
-      }, page * 3000);
-    }
-    // }
+    let headers = {
+      Accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.6",
+      "User-Agent":
+        "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Mobile Safari/537.36",
+      "Cache-Control": "max-age=0",
+      Connection: "keep-alive",
+    };
+    console.log("正在爬取代理...");
+    await this.initTable();
+    await request.get(`https://raw.githubusercontent.com/fate0/proxylist/master/proxy.list`)
+      .set('headers', headers).timeout(5000).end((err, res) => {
+        if(err) {
+          console.log('错误')
+        } else {
+          let str = res.text
+          let regex = /\{(.+)\}/g
+          let arr = []
+          str.match(regex).map(async (item, index) => {
+            let data = JSON.parse(item)
+            if(data.country === 'CN') {
+              let ip = `${data.type}://${data.host}:${data.port}`
+              await this.checkIP(ip, "https://www.zhipin.com/c101010100");
+            }
+          })
+        }
+      })
   }
+  // async subscribe() {
+  //   console.log("爬爬爬爬爬啊啪啪啪~~~");
+  //   let isNoData = await this.initTable();
+  //   // if (isNoData) {
+  //   for (let page = 1; page <= 3; page++) {
+  //     setTimeout(async () => {
+  //       console.log(`当前正在爬取第${page}页`);
+  //       let { data } = await this.ctx.curl(
+  //         `http://ip.kxdaili.com/dailiip/2/${page}.html#ip`
+  //       );
+  //       data = data.toString();
+  //       let $ = cheerio.load(data);
+  //       let proxyText = $("tbody tr");
+  //       let _this = this;
+  //       proxyText.each(async function(index, item) {
+  //         let $this = $(item);
+  //         let proxy = $this
+  //           .find("td")
+  //           .first()
+  //           .text();
+  //         let port = $this.find("td:nth-child(2)").text();
+  //         // let protocol = $this
+  //         //   .find("td:nth-child(4)")
+  //         //   .text()
+  //         //   .toLowerCase();
+  //         // 判断ip是否可以正常访问
+  //         let ip = `http://${proxy}:${port}`;
+  //         await _this.checkIP(ip, "https://www.zhipin.com/c101010100");
+  //       });
+  //     }, page * 3000);
+  //   }
+  //   // }
+  // }
 }
 
 module.exports = proxyCrawl;
