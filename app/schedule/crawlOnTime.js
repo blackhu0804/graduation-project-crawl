@@ -7,7 +7,7 @@ SuperagentProxy(request);
 class updataCrawl extends Subscription {
   static get schedule() {
     return {
-      // immediate: true,
+      immediate: true,
       // interval: "5s",
       cron: "0 0 */24 * * *", // 12小时爬一次
       // cron: "0 0 0 1 12 1",
@@ -148,11 +148,9 @@ class updataCrawl extends Subscription {
     let regionName = region.map(item => {
       return item.name;
     });
-    for (let regionIdx = 1; regionIdx <= 1; regionIdx++) {
-      // for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
+    for (let regionIdx = 1; regionIdx <= regionCode.length; regionIdx++) {
       setTimeout(async () => {
-        // for (let page = 1; page <= 10; page++) {
-        for (let page = 2; page <= 2; page++) {
+        for (let page = 1; page <= 10; page++) {
           setTimeout(async () => {
             try {
               await request
@@ -166,8 +164,8 @@ class updataCrawl extends Subscription {
                 .timeout(5000)
                 .end(async (err, res) => {
                   if (err) {
-                    console.error("未知错误");
-                    await this.removeProxy();
+                    console.error("IP失效");
+                    await this.removeProxy(ip);
                     ip = await this.getProxy();
                     page--;
                     return;
@@ -179,6 +177,7 @@ class updataCrawl extends Subscription {
                     );
                   } else {
                     console.log("ip访问出错！重新选择ip");
+                    await this.removeProxy(ip);
                     ip = await this.getProxy();
                     page--;
                     return;
@@ -188,9 +187,9 @@ class updataCrawl extends Subscription {
             } catch (error) {
               console.log(error);
             }
-          }, page * 2000);
+          }, page * 1000);
         }
-      }, regionIdx * 1000);
+      }, regionIdx * 10000);
     }
     return items;
   }
