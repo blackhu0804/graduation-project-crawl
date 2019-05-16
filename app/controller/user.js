@@ -157,7 +157,7 @@ class UserController extends Controller {
    */
   async sendVerifyCode() {
     const { email, type } = this.ctx.request.body;
-    const verifyCode = Math.ceil(Math.random() * 1000000);
+    const verifyCode = Math.random().toString().slice(-6);
 
     const userIsInTable = await this.ctx.model.User.find({ email });
     if (type === 0 && userIsInTable.length > 0) {
