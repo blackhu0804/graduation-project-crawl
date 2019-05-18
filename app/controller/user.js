@@ -13,28 +13,32 @@ class UserController extends Controller {
    */
   async createUser() {
     const { username, password, email, code } = this.ctx.request.body;
-    const verifyCode = await this.app.redis.get(
-      `egg_crawl_verify_code${email}`
-    );
-    if (code === verifyCode) {
-      const createdUser = await this.ctx.service.user.createUserWithUnPw(
-        username,
-        password,
-        email
-      );
-      this.ctx.body = {
-        code: 0,
-        msg: "注册成功"
-        // data: {
-        //   msg: "注册成功",
-        //   user: createdUser
-        // }
-      };
-    } else {
+    const isInUser = await this.ctx.model.User.find({username})
+    if(isInUser.length > 0) {
       this.ctx.body = {
         code: -1,
-        msg: "验证码不正确"
-      };
+        msg: '此用户名已存在'
+      }
+    } else {
+      const verifyCode = await this.app.redis.get(
+        `egg_crawl_verify_code${email}`
+      );
+      if (code === verifyCode) {
+        const createdUser = await this.ctx.service.user.createUserWithUnPw(
+          username,
+          password,
+          email
+        );
+        this.ctx.body = {
+          code: 0,
+          msg: "注册成功"
+        };
+      } else {
+        this.ctx.body = {
+          code: -1,
+          msg: "验证码不正确"
+        };
+      }
     }
   }
 
