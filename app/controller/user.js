@@ -78,7 +78,7 @@ class UserController extends Controller {
    * method: GET
    */
   async index() {
-    console.log(this.ctx.session.user);
+    // console.log(this.ctx.session.user);
     this.ctx.body = {
       code: 0,
       data: {
